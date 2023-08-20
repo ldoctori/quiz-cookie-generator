@@ -1,0 +1,19 @@
+server:
+  servlet:
+    context-path: "/api/cookie/v1"
+  port: 8090
+spring:
+  datasource:
+    url: jdbc:h2:file:/data/cookies
+    username: quiz
+    password: cookie
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+  h2:
+    console.enabled: true
+  sql:
+    init:
+      data-locations: "classpath:data.sql"
+      mode: always
