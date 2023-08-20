@@ -1,16 +1,25 @@
 package ru.quiz.generator.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.quiz.generator.model.CookieModel;
 
 import java.util.Optional;
 
 @Repository
-public interface CookieCrudRepository extends JpaRepository<CookieModel, Long> {
+@RequiredArgsConstructor
+public class CookieCrudRepository {
 
-//        Optional<CookieModel> findByPlayer1IsEmptyOrPlayer2IsEmpty();
-        Optional<CookieModel> findByPlayer1(String player1);
+        private final JdbcTemplate jdbcTemplate;
+
+        public Optional<CookieModel> findByPlayer1(String playerName, String theme) {
+
+                Optional.of(jdbcTemplate.query("SELECT * FROM COOKIE_SCHEMA.CHEMISTRY WHERE player1='Petuh'", ))
+
+                return null;
+        }
+
 
 
 

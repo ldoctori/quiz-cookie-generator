@@ -29,7 +29,8 @@ public class GetCookieService {
 //            cookieModel.getPlayer1() == null ? cookieModel.setPlayer1();
 //        }
 
-        Optional<CookieModel> cookieModel = cookieCrudRepository.findByPlayer1(getCookieRqDTO.getPlayerName());
+        Optional<CookieModel> cookieModel = cookieCrudRepository.findByPlayer1(getCookieRqDTO.getPlayerName(),
+                                                                                getCookieRqDTO.getTheme());
         LOGGER.info("Вот же {}", JsonUtil.getPrettyJson(cookieModel.get()));
         return null;
     }

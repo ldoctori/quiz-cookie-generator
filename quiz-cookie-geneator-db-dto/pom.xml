@@ -36,7 +36,7 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
     </dependencies>
@@ -55,6 +55,7 @@
                     <serializable>true</serializable>
                     <sourceType>jsonschema</sourceType>
                     <targetPackage>ru.quiz.generator.dto</targetPackage>
+                    <useLongIntegers>true</useLongIntegers>
                 </configuration>
                 <executions>
                     <execution>

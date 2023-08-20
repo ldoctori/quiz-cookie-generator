@@ -3,15 +3,13 @@ package ru.quiz.generator.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "chemistry")
 public class CookieModel implements Serializable {
 
 
