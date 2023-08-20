@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "javaType": "ru.quiz.generator.dto.GetCookieRsDTO",
+  "type": "object",
+  "properties": {
+    "header": {
+      "type": "object",
+      "$ref": "header/HeaderDTO.json"
+    },
+    "cookie": {
+      "type": "string",
+      "maxLength": 32
+    },
+    "theme": {
+      "type": "string",
+      "maxLength": 32
+    },
+    "enemyName": {
+      "type": "string",
+      "maxLength": 32
+    }
+  },
+  "required": ["header" , "theme"]
+}

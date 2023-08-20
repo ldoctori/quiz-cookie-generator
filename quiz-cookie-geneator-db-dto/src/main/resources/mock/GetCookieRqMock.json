@@ -1,0 +1,15 @@
+{
+  "header": {
+    "rqUID": "asdasdasd-asdasdasd-asdasd-asdas",
+    "rqTime": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Время запроса"
+    }
+  },
+  "playerName": "Petuh",
+  "theme": {
+    "type": "mathematics",
+    "maxLength": 32
+  }
+}

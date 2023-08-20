@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "javaType": "ru.quiz.generator.dto.header.HeaderDTO",
+  "type": "object",
+  "description": "Служебная часть запросов и ответов",
+  "properties": {
+    "rqUID": {
+      "type": "string",
+      "maxLength": 32,
+      "pattern": "^(([0-9]|[a-z]|[A-Z]{32}))$",
+      "description": "Уникальный идентификатор запроса"
+    },
+    "rqTime": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Время запроса"
+    },
+    "statusCode": {
+      "type": "integer",
+      "maximum": 999,
+      "minimum": 0,
+      "description": "Статусный код ответа"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["SUCCESS", "FAILURE"],
+      "description": "Статус ответа"
+    }
+  },
+  "required": ["rqUID", "rqTime"]
+}
