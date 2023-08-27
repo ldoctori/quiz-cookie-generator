@@ -18,6 +18,10 @@
     "enemyName": {
       "type": "string",
       "maxLength": 32
+    },
+    "enemyWaiting": {
+      "type": "boolean",
+      "description": "Ждать ли противника"
     }
   },
   "additionalProperties": false,

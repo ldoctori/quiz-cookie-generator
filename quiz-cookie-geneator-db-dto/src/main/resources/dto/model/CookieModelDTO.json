@@ -21,6 +21,10 @@
     "enemy": {
       "type": "string",
       "description": "Уже заприсаный в бд противник"
+    },
+    "enemyWaiting" : {
+      "type": "boolean",
+      "description": "Ждать ли противника"
     }
   },
   "additionalProperties": false,

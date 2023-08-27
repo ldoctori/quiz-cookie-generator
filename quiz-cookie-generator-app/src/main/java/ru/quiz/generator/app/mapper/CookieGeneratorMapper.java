@@ -11,16 +11,14 @@ import ru.quiz.generator.dto.model.CookieModelWithEnemyDTO;
 @Component
 public class CookieGeneratorMapper {
 
-//    private final static Logger LOGGER = LoggerFactory.getLogger(CookieGeneratorMapper.class);
-
     public GetCookieRsDTO generateCookieRsDTO(CookieModelWithEnemyDTO cookieModel, GetCookieRqDTO getCookieRqDTO) {
 
         return new GetCookieRsDTO()
                 .withHeader(getCookieRqDTO.getHeader().withStatus(HeaderDTO.Status.SUCCESS))
                 .withCookie(cookieModel.getCookie())
                 .withTheme(getCookieRqDTO.getTheme())
-                .withEnemyName(cookieModel.getEnemy());
-
+                .withEnemyName(cookieModel.getEnemy())
+                .withEnemyWaiting(cookieModel.getEnemyWaiting());
     }
 
 }

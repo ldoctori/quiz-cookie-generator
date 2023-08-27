@@ -26,6 +26,7 @@ public class GetCookieRestController {
 
         LOGGER.info(JsonUtil.getPrettyJson(getCookieRqDTO));
         ResponseEntity<?> responseEntity = getCookieService.getCookieRsDTO(getCookieRqDTO);
+        LOGGER.info(JsonUtil.getPrettyJson(responseEntity));
         return responseEntity;
     }
 

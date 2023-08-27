@@ -2,6 +2,7 @@ package ru.quiz.generator.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.quiz.generator.TableFieldsEnum;
@@ -32,10 +33,13 @@ public class CookieCrudRepository {
                         } else {
                                 throw new TableUpdateException();
                         }
-                } else if (createCookieAndSetPlayer1(getCookieRqDTO.getPlayerName(), getCookieRqDTO.getTheme()) == 1) {
-                        optionalList = findCookie(getCookieRqDTO.getTheme());
-                        if (optionalList.isPresent() && !optionalList.get().isEmpty())
-                                return  Optional.of(optionalList.get().get(0));
+                } else {
+                        String cookie = createCookieAndSetPlayer1(getCookieRqDTO.getPlayerName(), getCookieRqDTO.getTheme());
+                        if (cookie != null) {
+                                return Optional.of(new CookieModelWithEnemyDTO()
+                                        .withCookie(cookie)
+                                        .withEnemyWaiting(true));
+                        }
                 }
                 throw new TableUpdateException();
         }
@@ -48,7 +52,8 @@ public class CookieCrudRepository {
                                         .withId(resultSet.getLong(TableFieldsEnum.ID.label))
                                         .withCookie(resultSet.getString(TableFieldsEnum.COOKIE.label))
                                         .withEnemy(resultSet.getString(TableFieldsEnum.PLAYER1.label))
-                                        .withCreationTime(resultSet.getDate(TableFieldsEnum.CREATION_TIME.label))));
+                                        .withCreationTime(resultSet.getDate(TableFieldsEnum.CREATION_TIME.label))
+                                        .withEnemyWaiting(false)));
 
         }
 
@@ -61,11 +66,17 @@ public class CookieCrudRepository {
                         new Date());
         }
 
-        public int createCookieAndSetPlayer1(String playerName, String theme) throws DataAccessException {
-                return jdbcTemplate.update("INSERT INTO COOKIE_SCHEMA." + theme
+        public String createCookieAndSetPlayer1(String playerName, String theme) throws DataAccessException {
+                String cookie = CookieUtil.generateCookieString();
+
+                if ( jdbcTemplate.update("INSERT INTO COOKIE_SCHEMA." + theme
                         + "(cookie, creationTime, player1)  values (?, ?, ?)",
-                        CookieUtil.generateCookieString(),
+                        cookie,
                         new Date(),
-                        playerName);
+                        playerName) == 1) {
+                        return cookie;
+                } else
+                        return null;
+
         }
 }
