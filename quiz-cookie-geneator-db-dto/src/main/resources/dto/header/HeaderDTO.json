@@ -11,21 +11,16 @@
       "description": "Уникальный идентификатор запроса"
     },
     "rqTime": {
-      "type": "integer",
-      "minimum": 0,
+      "type": "string",
+      "format": "date-time",
       "description": "Время запроса"
     },
-    "statusCode": {
-      "type": "integer",
-      "maximum": 999,
-      "minimum": 0,
-      "description": "Статусный код ответа"
-    },
-    "status": {
+      "status": {
       "type": "string",
       "enum": ["SUCCESS", "FAILURE"],
       "description": "Статус ответа"
     }
   },
+  "additionalProperties": false,
   "required": ["rqUID", "rqTime"]
 }

@@ -16,5 +16,6 @@
       "maxLength": 32
     }
   },
+  "additionalProperties": false,
   "required": ["header" ,"playerName", "theme"]
 }

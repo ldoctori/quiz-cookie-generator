@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "javaType": "ru.quiz.generator.dto.model.CookieModelWithEnemyDTO",
+  "type": "object",
+  "description": "Объект строки в таблице кук",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Уникальный идентификатоh строки в таблице"
+    },
+    "cookie": {
+      "type": "string",
+      "maxLength": 32,
+      "description": "Кука"
+    },
+    "creationTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Время жизни куки"
+    },
+    "enemy": {
+      "type": "string",
+      "description": "Уже заприсаный в бд противник"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["id", "cookie", "ttl"]
+}

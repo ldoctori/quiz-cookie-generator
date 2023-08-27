@@ -9,7 +9,7 @@ CREATE SCHEMA IF NOT EXISTS cookie_schema;
 CREATE TABLE IF NOT EXISTS cookie_schema.mathematics (
                             id identity primary key,
                             cookie varchar(32),
-                            ttl BIGINT,
+                            creationTime DATETIME,
                             player1 varchar(32),
                             player2 varchar(32)
 );
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS cookie_schema.mathematics (
 CREATE TABLE IF NOT EXISTS cookie_schema.history (
                             id identity primary key,
                             cookie varchar(32),
-                            ttl BIGINT,
+                            creationTime DATETIME,
                             player1 varchar(32),
                             player2 varchar(32)
     );
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS cookie_schema.history (
 CREATE TABLE IF NOT EXISTS cookie_schema.geography (
                             id identity primary key,
                             cookie varchar(32),
-                            ttl BIGINT,
+                            creationTime DATETIME,
                             player1 varchar(32),
                             player2 varchar(32)
     );
@@ -33,10 +33,7 @@ CREATE TABLE IF NOT EXISTS cookie_schema.geography (
 CREATE TABLE IF NOT EXISTS cookie_schema.chemistry (
                             id bigint auto_increment,
                             cookie varchar(32),
-                            ttl BIGINT,
+                            creationTime DATETIME,
                             player1 varchar(32),
                             player2 varchar(32)
     );
-
-insert into cookie_schema.chemistry (cookie, ttl, player1, player2)
-    values ('ss', 123225, 'Petuh', 'SUKA')
