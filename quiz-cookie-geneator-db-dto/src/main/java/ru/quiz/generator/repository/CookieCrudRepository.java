@@ -2,7 +2,6 @@ package ru.quiz.generator.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.quiz.generator.TableFieldsEnum;
@@ -23,13 +22,15 @@ public class CookieCrudRepository {
 
         public Optional<?> getCookie(GetCookieRqDTO getCookieRqDTO) throws DataAccessException {
 
-                Optional<List<CookieModelWithEnemyDTO>> optionalList = findCookie(getCookieRqDTO.getTheme());
-                if (optionalList.isPresent() && !optionalList.get().isEmpty()) {
-                        CookieModelWithEnemyDTO cookieModel = optionalList.get().get(0);
-                        if (setPlayer2(getCookieRqDTO.getPlayerName(),
-                                getCookieRqDTO.getTheme(),
-                                cookieModel.getCookie()) == 1) {
-                                return Optional.of(cookieModel);
+                Optional<CookieModelWithEnemyDTO> optionalCookieModel = checkIsPlayerWithValidCookie(getCookieRqDTO.getTheme(),
+                                                                                                getCookieRqDTO.getPlayerName());
+                if (optionalCookieModel.isPresent())
+                        return optionalCookieModel;
+
+                optionalCookieModel = findCookie(getCookieRqDTO.getTheme());
+                if (optionalCookieModel.isPresent()) {
+                        if (setPlayer2(getCookieRqDTO.getPlayerName(), getCookieRqDTO.getTheme(), optionalCookieModel.get().getCookie())) {
+                                return optionalCookieModel;
                         } else {
                                 throw new TableUpdateException();
                         }
@@ -44,8 +45,20 @@ public class CookieCrudRepository {
                 throw new TableUpdateException();
         }
 
-        public Optional<List<CookieModelWithEnemyDTO>> findCookie(String theme) throws DataAccessException {
-                return Optional.of(jdbcTemplate.query("SELECT * FROM COOKIE_SCHEMA." + theme
+        private Optional<CookieModelWithEnemyDTO> checkIsPlayerWithValidCookie(String theme, String playerName) throws DataAccessException {
+                List<CookieModelWithEnemyDTO> cookieModelWithEnemyDTOS = jdbcTemplate.query("SELECT * FROM COOKIE_SCHEMA."
+                        + theme + " where Player2='" + playerName + "' OR Player1='" + playerName + "'", (resultSet, rowNum) ->
+                        new CookieModelWithEnemyDTO().withId(resultSet.getLong(TableFieldsEnum.ID.label))
+                                .withCookie(resultSet.getString(TableFieldsEnum.COOKIE.label))
+                                .withCreationTime(resultSet.getDate(TableFieldsEnum.CREATION_TIME.label)));
+                if (cookieModelWithEnemyDTOS.isEmpty()) {
+                        return Optional.empty();
+                }
+                return Optional.of(cookieModelWithEnemyDTOS.get(0).withEnemyWaiting(true));
+        }
+
+        private Optional<CookieModelWithEnemyDTO> findCookie(String theme) throws DataAccessException {
+                List<CookieModelWithEnemyDTO> cookieModelWithEnemyDTOS = jdbcTemplate.query("SELECT * FROM COOKIE_SCHEMA." + theme
                                         + " WHERE " + TableFieldsEnum.COOKIE.label + " IS NOT NULL AND "
                                         + TableFieldsEnum.PLAYER2.label + " IS NULL ",
                                 (resultSet, rowNum) -> new CookieModelWithEnemyDTO()
@@ -53,20 +66,21 @@ public class CookieCrudRepository {
                                         .withCookie(resultSet.getString(TableFieldsEnum.COOKIE.label))
                                         .withEnemy(resultSet.getString(TableFieldsEnum.PLAYER1.label))
                                         .withCreationTime(resultSet.getDate(TableFieldsEnum.CREATION_TIME.label))
-                                        .withEnemyWaiting(false)));
-
+                                        .withEnemyWaiting(false));
+                return cookieModelWithEnemyDTOS.isEmpty() ? Optional.empty() : Optional.of(cookieModelWithEnemyDTOS.get(0));
         }
 
-        public int setPlayer2(String playerName, String theme, String cookie) throws DataAccessException {
-                return jdbcTemplate.update("update COOKIE_SCHEMA." + theme
-                        + " set " + TableFieldsEnum.PLAYER2.label + " = ?"
-                        + ", " + TableFieldsEnum.CREATION_TIME.label + " = ?"
-                        + " where " + TableFieldsEnum.COOKIE.label + " = '" + cookie + "'",
-                        playerName,
-                        new Date());
+        private boolean setPlayer2(String playerName, String theme, String cookie) throws DataAccessException {
+
+            return jdbcTemplate.update("update COOKIE_SCHEMA." + theme
+                            + " set " + TableFieldsEnum.PLAYER2.label + " = ?"
+                            + ", " + TableFieldsEnum.CREATION_TIME.label + " = ?"
+                            + " where " + TableFieldsEnum.COOKIE.label + " = '" + cookie + "'",
+                    playerName,
+                    new Date()) == 1;
         }
 
-        public String createCookieAndSetPlayer1(String playerName, String theme) throws DataAccessException {
+        private String createCookieAndSetPlayer1(String playerName, String theme) throws DataAccessException {
                 String cookie = CookieUtil.generateCookieString();
 
                 if ( jdbcTemplate.update("INSERT INTO COOKIE_SCHEMA." + theme
