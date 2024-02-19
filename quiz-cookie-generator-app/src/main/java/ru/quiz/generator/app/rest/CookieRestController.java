@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 @RestController("/")
 @RequiredArgsConstructor
-public class GetCookieRestController {
+public class CookieRestController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(GetCookieService.class);
 
@@ -28,5 +28,4 @@ public class GetCookieRestController {
         LOGGER.info(JsonUtil.getPrettyJson(responseEntity));
         return responseEntity;
     }
-
 }

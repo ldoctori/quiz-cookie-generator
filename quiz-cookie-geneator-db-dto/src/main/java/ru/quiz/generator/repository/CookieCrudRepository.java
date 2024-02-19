@@ -47,14 +47,29 @@ public class CookieCrudRepository {
 
         private Optional<CookieModelWithEnemyDTO> checkIsPlayerWithValidCookie(String theme, String playerName) throws DataAccessException {
                 List<CookieModelWithEnemyDTO> cookieModelWithEnemyDTOS = jdbcTemplate.query("SELECT * FROM COOKIE_SCHEMA."
-                        + theme + " where Player2='" + playerName + "' OR Player1='" + playerName + "'", (resultSet, rowNum) ->
-                        new CookieModelWithEnemyDTO().withId(resultSet.getLong(TableFieldsEnum.ID.label))
+                        + theme + " where Player2='" + playerName + "' OR Player1='" + playerName + "'", (resultSet, rowNum) -> {
+                        String player1 = resultSet.getString(TableFieldsEnum.PLAYER1.label);
+                        String player2 = resultSet.getString(TableFieldsEnum.PLAYER2.label);
+
+                        CookieModelWithEnemyDTO cookieModelWithEnemyDTO = new CookieModelWithEnemyDTO()
                                 .withCookie(resultSet.getString(TableFieldsEnum.COOKIE.label))
-                                .withCreationTime(resultSet.getDate(TableFieldsEnum.CREATION_TIME.label)));
+                                .withCreationTime(resultSet.getDate(TableFieldsEnum.CREATION_TIME.label));
+                        if (playerName.equals(player1)) {
+                                cookieModelWithEnemyDTO.withEnemyWaiting(false)
+                                        .withEnemy(player2);
+                        } else if (playerName.equals(player2)) {
+                                cookieModelWithEnemyDTO.withEnemyWaiting(false)
+                                        .withEnemy(player1);
+                        } else {
+                                cookieModelWithEnemyDTO.withEnemyWaiting(true);
+                        }
+                        return cookieModelWithEnemyDTO;
+                        }
+                       );
                 if (cookieModelWithEnemyDTOS.isEmpty()) {
                         return Optional.empty();
                 }
-                return Optional.of(cookieModelWithEnemyDTOS.get(0).withEnemyWaiting(true));
+                return Optional.of(cookieModelWithEnemyDTOS.get(0));
         }
 
         private Optional<CookieModelWithEnemyDTO> findCookie(String theme) throws DataAccessException {
