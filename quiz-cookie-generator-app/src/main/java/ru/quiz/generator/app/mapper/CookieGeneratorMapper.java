@@ -15,7 +15,7 @@ public class CookieGeneratorMapper {
 
         return new GetCookieRsDTO()
                 .withHeader(getCookieRqDTO.getHeader().withStatus(HeaderDTO.Status.SUCCESS))
-                .withCookie(cookieModel.getCookie())
+                .withGameCookie(cookieModel.getCookie())
                 .withTheme(getCookieRqDTO.getTheme())
                 .withEnemyName(cookieModel.getEnemy())
                 .withEnemyWaiting(cookieModel.getEnemyWaiting());

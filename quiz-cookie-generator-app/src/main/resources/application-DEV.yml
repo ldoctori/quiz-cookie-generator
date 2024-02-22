@@ -8,5 +8,6 @@ spring:
     console.enabled: true
   sql:
     init:
-      data-locations: "classpath:data.sql"
+      data-locations: "classpath:game_cookie_data.sql,
+                        classpath:session_cookie_data.sql"
       mode: always

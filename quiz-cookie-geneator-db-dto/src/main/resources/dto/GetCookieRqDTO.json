@@ -7,7 +7,7 @@
       "type": "object",
       "$ref": "header/HeaderDTO.json"
     },
-    "playerName": {
+    "sessionCookie": {
       "type": "string",
       "maxLength": 32
     },
@@ -17,5 +17,5 @@
     }
   },
   "additionalProperties": false,
-  "required": ["header" ,"playerName", "theme"]
+  "required": ["header" ,"sessionCookie", "theme"]
 }

@@ -18,5 +18,4 @@ public class JsonUtil {
             return "Ошибка парсинга json.";
         }
     }
-
 }
