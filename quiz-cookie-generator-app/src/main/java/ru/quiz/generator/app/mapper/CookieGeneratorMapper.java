@@ -1,24 +1,44 @@
 package ru.quiz.generator.app.mapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.quiz.generator.dto.GetCookieRqDTO;
-import ru.quiz.generator.dto.GetCookieRsDTO;
+import ru.quiz.generator.dto.GetGameCookieRqDTO;
+import ru.quiz.generator.dto.GetGameCookieRsDTO;
+import ru.quiz.generator.dto.GetSessionCookieRqDTO;
+import ru.quiz.generator.dto.GetSessionCookieRsDTO;
 import ru.quiz.generator.dto.header.HeaderDTO;
 import ru.quiz.generator.dto.model.CookieModelWithEnemyDTO;
+import ru.quiz.generator.model.SessionModel;
+import ru.quiz.generator.utils.CookieUtil;
+
+import java.util.Date;
 
 @Component
 public class CookieGeneratorMapper {
 
-    public GetCookieRsDTO generateCookieRsDTO(CookieModelWithEnemyDTO cookieModel, GetCookieRqDTO getCookieRqDTO) {
+    public GetGameCookieRsDTO generateCookieRsDTO(CookieModelWithEnemyDTO cookieModel, GetGameCookieRqDTO getGameCookieRqDTO) {
 
-        return new GetCookieRsDTO()
-                .withHeader(getCookieRqDTO.getHeader().withStatus(HeaderDTO.Status.SUCCESS))
+        assert getGameCookieRqDTO.getHeader() != null;
+        return new GetGameCookieRsDTO()
+                .withHeader(getGameCookieRqDTO.getHeader().withStatus(HeaderDTO.Status.SUCCESS))
                 .withGameCookie(cookieModel.getCookie())
-                .withTheme(getCookieRqDTO.getTheme())
+                .withTheme(getGameCookieRqDTO.getTheme())
                 .withEnemyName(cookieModel.getEnemy())
                 .withEnemyWaiting(cookieModel.getEnemyWaiting());
     }
 
+    public SessionModel generateSessionModelEntity(GetSessionCookieRqDTO getSessionCookieRqDTO){
+
+        SessionModel sessionModel = new SessionModel();
+        sessionModel.setSessionCookie(CookieUtil.generateCookieString());
+        sessionModel.setCreationTime(new Date());
+        sessionModel.setLogin(getSessionCookieRqDTO.getLogin());
+
+        return sessionModel;
+    }
+
+    public GetSessionCookieRsDTO generateGetSessionCookieRsDTO(SessionModel sessionModel, GetSessionCookieRqDTO getSessionCookieRqDTO) {
+        assert getSessionCookieRqDTO.getHeader() != null;
+        return new GetSessionCookieRsDTO().withHeader(getSessionCookieRqDTO.getHeader().withStatus(HeaderDTO.Status.SUCCESS))
+                .withSessionCookie(sessionModel.getSessionCookie());
+    }
 }

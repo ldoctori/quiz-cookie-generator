@@ -4,6 +4,12 @@ spring:
     username: quiz
     password: cookie
     driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
   h2:
     console.enabled: true
   sql:

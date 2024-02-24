@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.quiz.generator.model.SessionModel;
 
 @Repository
-public interface SessionCookieCrudRepository extends JpaRepository<SessionModel, Long> {
+public interface AuthCrudRepository extends JpaRepository<SessionModel, Long> {
 }

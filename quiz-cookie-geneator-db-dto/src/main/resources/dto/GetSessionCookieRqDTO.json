@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "javaType": "ru.quiz.generator.dto.GetSessionCookieRqDTO",
+  "type": "object",
+  "properties": {
+    "header": {
+      "type": "object",
+      "$ref": "header/HeaderDTO.json"
+    },
+    "login": {
+      "type": "string",
+      "maxLength": 32
+    },
+    "password": {
+      "type": "string",
+      "maxLength": 32
+    }
+  },
+  "additionalProperties": false,
+  "required": ["header" ,"login", "password"]
+}
