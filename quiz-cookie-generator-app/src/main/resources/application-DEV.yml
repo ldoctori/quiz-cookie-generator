@@ -15,5 +15,6 @@ spring:
   sql:
     init:
       data-locations: "classpath:game_cookie_data.sql,
-                        classpath:session_cookie_data.sql"
+                        classpath:session_cookie_data.sql,
+                        classpath:auth_data.sql"
       mode: always

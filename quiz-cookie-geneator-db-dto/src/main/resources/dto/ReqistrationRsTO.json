@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "javaType": "ru.quiz.generator.dto.RegistrationRsDTO",
+  "type": "object",
+  "properties": {
+    "header": {
+      "type": "object",
+      "$ref": "header/HeaderDTO.json"
+    },
+    "registrationStatus": {
+      "type": "string",
+      "enum": ["SUCCESS", "FAILURE", "ALREADY_REGISTERED"]
+    },
+    "registrationStatusDesc": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["header" ,"registrationStatus", "registrationStatusDesc"]
+}

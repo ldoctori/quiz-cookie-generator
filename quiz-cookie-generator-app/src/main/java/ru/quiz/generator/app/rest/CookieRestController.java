@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.quiz.generator.app.service.GetCookieService;
-import ru.quiz.generator.dto.AuthRqDTO;
+import ru.quiz.generator.dto.RegistrationRqDTO;
 import ru.quiz.generator.dto.GetGameCookieRqDTO;
 import ru.quiz.generator.dto.GetSessionCookieRqDTO;
 import ru.quiz.generator.utils.JsonUtil;
@@ -40,8 +40,8 @@ public class CookieRestController {
     }
 
     @PostMapping("registration")
-    public ResponseEntity<?> registration(@Valid @RequestBody AuthRqDTO authRqDTO) {
-        LOGGER.info("получен запрос на регистрацию. Тело запроса {}", JsonUtil.getPrettyJson(authRqDTO));
-        return null;
+    public ResponseEntity<?> registration(@Valid @RequestBody RegistrationRqDTO registrationRqDTO) {
+        LOGGER.info("получен запрос на регистрацию. Тело запроса {}", JsonUtil.getPrettyJson(registrationRqDTO));
+        return getCookieService.registration(registrationRqDTO);
     }
 }

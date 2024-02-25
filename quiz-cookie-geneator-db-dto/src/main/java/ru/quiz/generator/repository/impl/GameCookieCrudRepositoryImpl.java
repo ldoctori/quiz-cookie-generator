@@ -22,7 +22,7 @@ public class GameCookieCrudRepositoryImpl implements GameCookieCrudRepository {
         private final JdbcTemplate jdbcTemplate;
 
         @Override
-        public Optional<?> getCookie(GetGameCookieRqDTO getGameCookieRqDTO) throws DataAccessException {
+        public Optional<?> getCookie(GetGameCookieRqDTO getGameCookieRqDTO) throws DataAccessException, TableUpdateException {
 
                 Optional<CookieModelWithEnemyDTO> optionalCookieModel = checkIsPlayerWithValidGameCookie(getGameCookieRqDTO.getTheme(),
                                                                                                 getGameCookieRqDTO.getSessionCookie());

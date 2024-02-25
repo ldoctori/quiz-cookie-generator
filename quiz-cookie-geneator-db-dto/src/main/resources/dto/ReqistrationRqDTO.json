@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "javaType": "ru.quiz.generator.dto.AuthRqDTO",
+  "javaType": "ru.quiz.generator.dto.RegistrationRqDTO",
   "type": "object",
   "properties": {
     "header": {
