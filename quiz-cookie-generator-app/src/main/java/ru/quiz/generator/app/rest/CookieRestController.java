@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.quiz.generator.app.configuration.RequestContext;
 import ru.quiz.generator.app.service.GetCookieService;
 import ru.quiz.generator.dto.rq.RegistrationRqDTO;
 import ru.quiz.generator.dto.rq.GetGameCookieRqDTO;
@@ -21,9 +20,6 @@ import javax.validation.Valid;
 @RequestMapping("/")
 @RequiredArgsConstructor
 public class CookieRestController {
-
-    @Inject
-    private RequestContext requestContext;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(GetCookieService.class);
 
