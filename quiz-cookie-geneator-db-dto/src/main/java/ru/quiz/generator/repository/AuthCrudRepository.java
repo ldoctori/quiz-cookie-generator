@@ -7,5 +7,5 @@ import ru.quiz.generator.model.AuthModel;
 public interface AuthCrudRepository extends JpaRepository<AuthModel, Long> {
 
     AuthModel findByLogin(String login);
-
+    AuthModel findByLoginAndPassword(String login, String password);
 }

@@ -7,10 +7,16 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import ru.quiz.generator.app.enums.ResultDescriptionEnum;
 import ru.quiz.generator.app.mapper.CookieGeneratorMapper;
-import ru.quiz.generator.dto.*;
 import ru.quiz.generator.dto.header.HeaderDTO;
 import ru.quiz.generator.dto.model.CookieModelWithEnemyDTO;
+import ru.quiz.generator.dto.rq.AuthorizationRqDTO;
+import ru.quiz.generator.dto.rq.GetGameCookieRqDTO;
+import ru.quiz.generator.dto.rq.RegistrationRqDTO;
+import ru.quiz.generator.dto.rs.AuthorizationRsDTO;
+import ru.quiz.generator.dto.rs.GetGameCookieRsDTO;
+import ru.quiz.generator.dto.rs.RegistrationRsDTO;
 import ru.quiz.generator.exception.TableUpdateException;
 import ru.quiz.generator.model.AuthModel;
 import ru.quiz.generator.model.SessionModel;
@@ -36,6 +42,7 @@ public class GetCookieService {
 
     public ResponseEntity<?> getGameCookieRsDTO(GetGameCookieRqDTO getGameCookieRqDTO) {
 
+        assert getGameCookieRqDTO.getHeader() != null;
         try {
             Optional<?> optionalCookieModel = gameCookieCrudRepository.getCookie(getGameCookieRqDTO);
             LOGGER.info(JsonUtil.getPrettyJson(optionalCookieModel.get()));
@@ -43,25 +50,31 @@ public class GetCookieService {
             GetGameCookieRsDTO getGameCookieRsDTO = cookieGeneratorMapper.generateCookieRsDTO(cookieModel, getGameCookieRqDTO);
             return ResponseEntity.ok(getGameCookieRsDTO);
         } catch (DataAccessException | TableUpdateException e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<?> getSessionCookieRsDTO(GetSessionCookieRqDTO getSessionCookieRqDTO) {
+    public ResponseEntity<?> authorizeAndGetSessionCookie(AuthorizationRqDTO authorizationRqDTO) {
 
+        assert authorizationRqDTO.getHeader() != null;
         try {
-            SessionModel sessionModel = sessionCookieCrudRepository.save(cookieGeneratorMapper.generateSessionModelEntity(getSessionCookieRqDTO));
-            GetSessionCookieRsDTO getSessionCookieRsDTO = cookieGeneratorMapper.generateGetSessionCookieRsDTO(sessionModel, getSessionCookieRqDTO);
-            return ResponseEntity.ok(getSessionCookieRsDTO);
+            if (!authorize(authorizationRqDTO)) {
+                return ResponseEntity.ok(new AuthorizationRsDTO().withHeader(authorizationRqDTO.getHeader().withStatus(HeaderDTO.Status.FAILURE))
+                        .withErrorMessage(ResultDescriptionEnum.WRONG_LOGIN_OR_PASSOWRD.label));
+            }
+            AuthorizationRsDTO authorizationRsDTO = getSessionCookie(authorizationRqDTO);
+            return ResponseEntity.ok(authorizationRsDTO);
         } catch (PersistenceException e) {
-            LOGGER.error(e.toString());
-            return ResponseEntity.ok("NOOOO");
+            LOGGER.error(e.getMessage());
+            return ResponseEntity.ok(new AuthorizationRsDTO().withHeader(authorizationRqDTO.getHeader().withStatus(HeaderDTO.Status.FAILURE))
+                    .withErrorMessage(ResultDescriptionEnum.AUTHORIZATION_ERROR.label));
         }
     }
 
     public ResponseEntity<?> registration(RegistrationRqDTO registrationRqDTO) {
 
+        assert registrationRqDTO.getHeader() != null;
         AuthModel authModel = cookieGeneratorMapper.generateAuthModel(registrationRqDTO);
         AuthModel registeredModel = authCrudRepository.findByLogin(authModel.getLogin());
         if (registeredModel != null) {
@@ -73,5 +86,14 @@ public class GetCookieService {
         return ResponseEntity.ok(cookieGeneratorMapper.generateRegistrationRsDTO(registrationRqDTO,
                                                                                     HeaderDTO.Status.SUCCESS,
                                                                                     RegistrationRsDTO.RegistrationStatus.SUCCESS));
+    }
+
+    private boolean authorize(AuthorizationRqDTO authorizationRqDTO) {
+        return authCrudRepository.findByLoginAndPassword(authorizationRqDTO.getLogin(), authorizationRqDTO.getPassword()) != null;
+    }
+
+    private AuthorizationRsDTO getSessionCookie(AuthorizationRqDTO authorizationRqDTO) {
+        SessionModel sessionModel = sessionCookieCrudRepository.save(cookieGeneratorMapper.generateSessionModelEntity(authorizationRqDTO));
+        return cookieGeneratorMapper.generateGetSessionCookieRsDTO(sessionModel, authorizationRqDTO);
     }
 }

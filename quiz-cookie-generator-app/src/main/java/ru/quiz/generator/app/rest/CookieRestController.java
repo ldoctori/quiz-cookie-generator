@@ -8,21 +8,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.quiz.generator.app.configuration.RequestContext;
 import ru.quiz.generator.app.service.GetCookieService;
-import ru.quiz.generator.dto.RegistrationRqDTO;
-import ru.quiz.generator.dto.GetGameCookieRqDTO;
-import ru.quiz.generator.dto.GetSessionCookieRqDTO;
+import ru.quiz.generator.dto.rq.RegistrationRqDTO;
+import ru.quiz.generator.dto.rq.GetGameCookieRqDTO;
+import ru.quiz.generator.dto.rq.AuthorizationRqDTO;
 import ru.quiz.generator.utils.JsonUtil;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 @RestController
 @RequestMapping("/")
 @RequiredArgsConstructor
 public class CookieRestController {
 
+    @Inject
+    private RequestContext requestContext;
+
     private final static Logger LOGGER = LoggerFactory.getLogger(GetCookieService.class);
 
     private final GetCookieService getCookieService;
+
     @PostMapping("getGameCookie")
     public ResponseEntity<?> getGameCookie(@Valid @RequestBody GetGameCookieRqDTO getGameCookieRqDTO) {
 
@@ -32,10 +38,11 @@ public class CookieRestController {
         return responseEntity;
     }
 
-    @PostMapping("getSessionCookie")
-    public ResponseEntity<?> getSessionCookie(@Valid @RequestBody GetSessionCookieRqDTO getSessionCookieRqDTO) {
-        LOGGER.info("получен запрос на создание сессионной куки. Тело запроса {}", JsonUtil.getPrettyJson(getSessionCookieRqDTO));
-        ResponseEntity<?> responseEntity = getCookieService.getSessionCookieRsDTO(getSessionCookieRqDTO);
+    @PostMapping("authorizeAndGetSessionCookie")
+    public ResponseEntity<?> authorizeAndGetSessionCookie(@Valid @RequestBody AuthorizationRqDTO authorizationRqDTO) {
+
+        LOGGER.info("получен запрос на создание сессионной куки. Тело запроса {}", JsonUtil.getPrettyJson(authorizationRqDTO));
+        ResponseEntity<?> responseEntity = getCookieService.authorizeAndGetSessionCookie(authorizationRqDTO);
         return responseEntity;
     }
 

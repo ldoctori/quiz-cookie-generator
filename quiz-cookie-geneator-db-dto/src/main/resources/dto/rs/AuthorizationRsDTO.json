@@ -1,21 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "javaType": "ru.quiz.generator.dto.RegistrationRqDTO",
+  "javaType": "ru.quiz.generator.dto.rs.AuthorizationRsDTO",
   "type": "object",
   "properties": {
     "header": {
       "type": "object",
-      "$ref": "header/HeaderDTO.json"
+      "$ref": "../header/HeaderDTO.json"
     },
-    "login": {
-      "type": "string",
-      "maxLength": 32
+    "errorMessage": {
+      "type": "string"
     },
-    "password": {
+    "sessionCookie": {
       "type": "string",
       "maxLength": 32
     }
   },
   "additionalProperties": false,
-  "required": ["header" ,"login", "password"]
+  "required": ["header"]
 }

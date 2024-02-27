@@ -1,4 +1,4 @@
-package ru.quiz.generator;
+package ru.quiz.generator.enums;
 
 public enum TableFieldsEnum {
 

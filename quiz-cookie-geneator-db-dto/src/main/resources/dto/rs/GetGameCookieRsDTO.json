@@ -1,11 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "javaType": "ru.quiz.generator.dto.GetGameCookieRsDTO",
+  "javaType": "ru.quiz.generator.dto.rs.GetGameCookieRsDTO",
   "type": "object",
   "properties": {
     "header": {
       "type": "object",
-      "$ref": "header/HeaderDTO.json"
+      "$ref": "../header/HeaderDTO.json"
     },
     "gameCookie": {
       "type": "string",
